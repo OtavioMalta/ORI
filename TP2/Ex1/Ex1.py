@@ -9,7 +9,7 @@ def obtemDocumentos(pathDir):
     for arq in os.listdir(pathDir):
         if arq.endswith(".txt"):
             f = open(pathDir + arq, 'r')
-            palavra = unidecode(f.read().lower())
+            palavra = re.sub(r'[^\w\s]', '',unidecode(f.read().lower()))
             termos = termos + " " + palavra
     return termos
 
@@ -55,20 +55,25 @@ def obtemDocumento(path):
     palavras = unidecode(f.read().lower()).split()
     return palavras
 
-def bagOfWords(pathVocabulario, pathDocumento):
-    bagOfWords = []
+def bagOfWords(pathVocabulario, pathDocumentos):
     termos = obterTermos(pathVocabulario)
-    palavras = obtemDocumento(pathDocumento)
 
-    # Percorre a lista de termos e verifica se o termo aparece no documento
-    for t in termos:
-        if t in palavras:
-            bagOfWords.append(1)
-        else:
-            bagOfWords.append(0)
+    for arq in os.listdir(pathDocumentos):
+        bagOfWords = []
+        if arq.endswith(".txt"):
+            f = open(pathDocumentos + arq, 'r')
+            palavras = re.sub(r'[^\w\s]', '',unidecode(f.read().lower())).split()
+            
+            # Percorre a lista de termos e verifica se o termo aparece no documento
+            for t in termos:
+                if t in palavras:
+                    bagOfWords.append(1)
+                else:
+                    bagOfWords.append(0)
 
-    # Imprime a bag of words
-    print(bagOfWords)
+            # Imprime a bag of words
+            print(bagOfWords)
+        
 
 #1)
 termos = obtemDocumentos('TP2/Ex1/arquivos/')
@@ -77,6 +82,4 @@ termos = obtemDocumentos('TP2/Ex1/arquivos/')
 gerarVocabulario(termos, 'TP2/Ex1/vocabulario.txt')
 
 #4)
-bagOfWords('TP2/Ex1/vocabulario.txt', 'TP2/Ex1/arquivos/arq1.txt')
-bagOfWords('TP2/Ex1/vocabulario.txt', 'TP2/Ex1/arquivos/arq2.txt')
-bagOfWords('TP2/Ex1/vocabulario.txt', 'TP2/Ex1/arquivos/arq3.txt')
+bagOfWords('TP2/Ex1/vocabulario.txt', 'TP2/Ex1/arquivos/')
