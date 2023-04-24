@@ -1,12 +1,16 @@
 from unidecode import unidecode
 import os
 import re
+import time
 
 def obtemDocumentos(pathDir):
     termos = ""
 
-    # Abre multiplos arquivos de texto
-    for arq in os.listdir(pathDir):
+    # Obtém os nomes dos arquivos e ordena em ordem alfabética
+    arquivos = sorted(os.listdir(pathDir))
+
+    # Abre multiplos documentos de texto
+    for arq in arquivos:
         if arq.endswith(".txt"):
             f = open(pathDir + arq, 'r')
             palavra = re.sub(r'[^\w\s]', '',unidecode(f.read().lower()))
@@ -58,7 +62,10 @@ def obtemDocumento(path):
 def bagOfWords(pathVocabulario, pathDocumentos):
     termos = obterTermos(pathVocabulario)
 
-    for arq in os.listdir(pathDocumentos):
+    # Obtém os nomes dos arquivos e ordena em ordem alfabética
+    arquivos = sorted(os.listdir(pathDocumentos))
+
+    for arq in arquivos:
         bagOfWords = []
         if arq.endswith(".txt"):
             f = open(pathDocumentos + arq, 'r')
@@ -71,15 +78,23 @@ def bagOfWords(pathVocabulario, pathDocumentos):
                 else:
                     bagOfWords.append(0)
 
+            # Imprime o nome do documento sem pular linha
+            print(arq, end=' ')
+
             # Imprime a bag of words
             print(bagOfWords)
         
 
 #1)
-termos = obtemDocumentos('TP2/Ex1/arquivos/')
+#verificar tempo de execução do código 
+start = time.time()
+
+termos = obtemDocumentos('TP2/Ex3/documentos/')
 
 #2 e 3)
-gerarVocabulario(termos, 'TP2/Ex1/vocabulario.txt')
-
+gerarVocabulario(termos, 'TP2/Ex3/vocabulario.txt')
+end = time.time()
+enlapsed = end - start
+print("Tempo para criar o vocabulário: ", enlapsed)
 #4)
-bagOfWords('TP2/Ex1/vocabulario.txt', 'TP2/Ex1/arquivos/')
+bagOfWords('TP2/Ex3/vocabulario.txt', 'TP2/Ex3/documentos/')
