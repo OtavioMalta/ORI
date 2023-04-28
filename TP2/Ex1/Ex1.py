@@ -13,17 +13,15 @@ def obtemDocumentos(pathDir):
     for arq in arquivos:
         if arq.endswith(".txt"):
             f = open(pathDir + arq, 'r')
+            # Remove acentos e pontuação 
             palavra = re.sub(r'[^\w\s]', '',unidecode(f.read().lower()))
+            # Concatena os termos
             termos = termos + " " + palavra
     return termos
 
 def gerarVocabulario(termos, pathVocabulario):
-    # Remove acentos e pontuação
-    # re.sub(r'[^\w\s]','',linhas) remove pontuação
-    # unicode(f.read().lower()) remove acentos
-    linhas = re.sub(r'[^\w\s]', '', unidecode(termos.lower()))
-    # Separa as palavras
-    palavras = list(linhas.split())
+    # Separa os termos
+    palavras = termos.split()
 
     vocabulario = []
     # Percorre a lista de palavras e adiciona as que não estão na lista de termos
@@ -43,8 +41,8 @@ def obterTermos(path):
     # Abre o arquivo com o vocabulário
     f = open(path, 'r')
 
-    # Lê o arquivo e converte para minúsculo
-    vocabulario = f.read().lower()
+    # Lê o arquivo
+    vocabulario = f.read()
     
     # Separa os termos
     termos = vocabulario.split()
@@ -65,6 +63,7 @@ def bagOfWords(pathVocabulario, pathDocumentos):
     # Obtém os nomes dos arquivos e ordena em ordem alfabética
     arquivos = sorted(os.listdir(pathDocumentos))
 
+    # Abre multiplos documentos de texto
     for arq in arquivos:
         bagOfWords = []
         if arq.endswith(".txt"):
@@ -89,12 +88,12 @@ def bagOfWords(pathVocabulario, pathDocumentos):
 #verificar tempo de execução do código 
 start = time.time()
 
-termos = obtemDocumentos('TP2/Ex3/documentos/')
+termos = obtemDocumentos('TP2/Ex1/documentos/')
 
 #2 e 3)
-gerarVocabulario(termos, 'TP2/Ex3/vocabulario.txt')
+gerarVocabulario(termos, 'TP2/Ex1/vocabulario.txt')
 end = time.time()
 enlapsed = end - start
 print("Tempo para criar o vocabulário: ", enlapsed)
 #4)
-bagOfWords('TP2/Ex3/vocabulario.txt', 'TP2/Ex3/documentos/')
+bagOfWords('TP2/Ex1/vocabulario.txt', 'TP2/Ex1/documentos/')
