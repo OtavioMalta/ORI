@@ -1,0 +1,47 @@
+D1 – {logan e ororo são x-men}
+D2 – {stark, parker e logan já foram vingadores parker gostaria de ser novamente}
+D3 – {ororo e stark não são guardiões e sim vingadores, groot e rocket são guardiões mas poderiam ser vingadores}
+D4 – {eu sou groot logan todos somos groot o groot irá ajudar ororo e os x-men}
+D5 - {rocket e groot formam uma boa dupla nos guardiões rocket é maluco mas adora o groot}
+
+V = {logan, ororo, stark, parker, groot, rocket, x-men, vingadores, guardiões}.
+
+A)
+  termo        fi1    fi2     fi3     fi4     fi5    TFi1     TFi2    TFi3    TFi4    TFi5    IDFi     d1      d2      d3      d4      d5     
+logan       |   1   |   1   |   0   |   1   |   0   |   1   |   1   |   0   |   1   |   0   | 0.736 | 0.736 | 0.736 |   0   | 0.736 |   0   |
+ororo       |   1   |   0   |   1   |   1   |   0   |   1   |   0   |   1   |   1   |   0   | 0.736 | 0.736 |   0   | 0.736 | 0.736 |   0   |      
+stark       |   0   |   1   |   1   |   0   |   0   |   0   |   1   |   1   |   0   |   0   | 1.321 |   0   | 1.321 | 1.321 |   0   |   0   |
+parker      |   0   |   2   |   0   |   0   |   0   |   0   |   2   |   0   |   0   |   0   | 2.643 |   0   | 4.643 |   0   |   0   |   0   |
+groot       |   0   |   0   |   1   |   3   |   2   |   0   |   0   |   1   | 2.584 |   2   | 0.736 |   0   |   0   | 0.736 | 1.905 | 1.473 |
+rocket      |   0   |   0   |   1   |   0   |   2   |   0   |   0   |   1   |   0   |   2   | 1.321 |   0   |   0   | 1.321 |   0   | 2.643 |
+x-men       |   1   |   0   |   0   |   1   |   0   |   1   |   0   |   0   |   1   |   0   | 1.321 | 1.321 |   0   |   0   | 1.321 |   0   |
+vingadores  |   0   |   1   |   2   |   0   |   0   |   0   |   1   |   2   |   0   |   0   | 1.321 |   0   | 1.321 | 2.643 |   0   |   0   |
+guardiões   |   0   |   0   |   2   |   0   |   1   |   0   |   0   |   2   |   0   |   1   | 1.321 |   0   |   0   | 2.643 |   0   | 1.321 |
+
+norma                                                                                                 1.681   5.058   4.306   2.541   3.301
+
+B)
+q1       = {logan ororo x-men}.
+TF_q     = (1, 1, 0, 0, 0, 0, 1, 0, 0) 
+IDF_q    = (0.736, 0.736, 0, 0, 0, 0, 1.321, 0, 0)
+TF-IDF_q = (0.736, 0.736, 0, 0, 0, 0, 1.321, 0, 0)
+||q||    = 1.681
+
+d1  |  (0.736*0.736 + 0.736*0.736 + 1.321*1.321) / 3.362  = 0.841
+d2  |  (0.736*0.736 + 0.736*0 + 1.321*0)         / 6.739  = 0.080
+d3  |  (0.736*0 + 0.736*0.736 + 1.321*0)         / 5.987  = 0.090
+d4  |  (0.736*0.736 + 0.736*0.736 + 1.321*1.321) / 4.222  = 0.669
+d5  |  (0.736*0 + 0.736*0 + 1.321*0)             / 4.982  = 0
+
+Como é possível notar, d1 e d4 apresentam o maior grau de similaridade por conter todos os termos. 
+Entretando, por ser menor, o grau de d1 se torna maior que de d4.
+D5, por outro lado, não possui nenhum dos termos da consulta, portantanto, seu grau de similaridade é 0.
+
+C) Como obtemos a representação vetorial de cada documento, conseguimos sim compara-los.
+A similaridade entre o d1 e d5 seria igual a 0, visto que nenhum dos termos presentes em d1 estão
+presentes em d2, e vice versa. Ou seja, não há semelhança alguma entre eles.
+O calculo para esta similaridade é o segunte:
+
+TF-IDF_d1  = (0.736, 0.736, 0, 0, 0, 0, 1.321, 0, 0)
+TF-IDF_d5  = (0, 0, 0, 0, 1.473, 2.643, 0, 0, 1.321)
+sim(d1,d5) = (0.736*0 + 0.736*0 + 0*1.473 + 0*2.643 + 1.321*0 + 0*1.321) / 4.982 = 0
