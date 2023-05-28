@@ -1,6 +1,6 @@
 # TP2 - Leitura múltipla de arquivos e TF-IDF
 
-##Exercício 1
+## Exercício 1
 
 Criar um programa que faça o seguinte:
 
