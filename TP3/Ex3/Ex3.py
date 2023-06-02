@@ -24,8 +24,8 @@ def ObtemConsulta(path):
     f = open(path, 'r')
     return f
 
-# converter letras em minúsculo, remover acentos, números e pontuação e remover stopwords usando a biblioteca do Python NTLK.
 def processarConsulta(f):
+    # retira pontuação, transforma em minúsculo e remove acentos
     return re.findall(r'\b[A-zÀ-úü]+\b', unidecode(f.lower()))
 
 def obtemDocumentos(pathDir, list_stopwords):
@@ -38,6 +38,7 @@ def obtemDocumentos(pathDir, list_stopwords):
     for arq in arquivos:
         if arq.endswith(".txt"):
             f = open(pathDir + arq, 'r')
+            # retira pontuação, transforma em minúsculo e remove acentos
             palavra = re.sub(r'[^\w\s]', '', unidecode(f.read().lower())).split()
             documento = palavra
     
@@ -67,7 +68,6 @@ def calcularTF(termos, documentos, consulta):
         tfs[doc_nome] = list(tf.values())
 
     tf = {}
-    # Calcula o TF da consulta
     # Percorre os termos
     for termo in termos:
         # Conta o número de vezes que o termo aparece na consulta
@@ -79,12 +79,14 @@ def calcularTF(termos, documentos, consulta):
             tf[termo] = 1 + math.log(count, 2)
     # Adiciona o TF da consulta ao dicionário de tfs
     tfs["consulta"] = list(tf.values())
+    
     return tfs
 
 def calcularIDF(termos, documentos):
     idfs = {}
     # Percorre os termos
     for termo in termos:
+        
         count = 0
         # Percorre os documentos
         for doc in documentos.values():
@@ -124,6 +126,7 @@ def  grauSimilaridade(tfidfs, consulta):
             grauSimilaridade[tfidf] += tfidfs[tfidf][i] * consulta[i]
 
         # Calcula a norma 
+        # Se a norma de um dos vetores for 0, o grau de similaridade é 0
         if norma(consulta) == 0 or norma(tfidfs[tfidf]) == 0:
             grauSimilaridade[tfidf] = 0
         else:
@@ -137,17 +140,21 @@ def norma(objeto):
     return math.sqrt(norma)
 
 def obtemStopWords(lingua):
-    # Obtem stopwords em ingles
+    # Obtem stopwords a partir da lingua escolhida
     nltk.download('stopwords')
     stopwords = nltk.corpus.stopwords.words(lingua)
     list_stopwords = set(stopwords)
     return list_stopwords
 
 
-print("Digite sua consulta ou caminho:")
+print("Digite sua consulta: ")
 consulta = input()
+
+# Calcula o tempo de execução
+start = time.time()
 consultaProcessada = processarConsulta(consulta)
 
+# Como as músicas são em inglês, a lingua escolhida foi o inglês
 list_stopwords = obtemStopWords('english')
 
 documentos =obtemDocumentos("/workspaces/ORI/TP3/Ex3/documentos/", list_stopwords)
@@ -157,61 +164,15 @@ tf = calcularTF(vocabulario, documentos, consultaProcessada)
 idf = calcularIDF(vocabulario, documentos)
 tfidfs = calcularTFIDF(tf, idf)
 
-# Calcula o tempo de execução
-start = time.time()
-
 grauSimilaridade = grauSimilaridade(tfidfs, tfidfs["consulta"])
 
 end = time.time()
-
+print()
 print("Grau de similaridade: ")
 freq = FreqDist(grauSimilaridade)
-top5 = freq.most_common(5)
-for t in top5:
-    print(t[0], t[1])
+
+#imprime todos os documentos ordenados por grau de similaridade
+for doc, grau in freq.most_common():
+    print(doc, grau)
 
 print("Tempo de execução: ", end - start)
-"""
- sem 0.0037736892700195312
-
-baby i know you
-    Baby,CometoMe.txt 0.2058773036242993
-    EveryBreathYouTake.txt 0.10672863169181693
-    BillieJean.txt 0.10466371913293618
-    IKnowThere'sSomethingGoingOn.txt 0.0337644104629742
-    YouandI.txt 0.021782675647699652
-    Tempo de execução:  0.00840902328491211
-
- boy come from far away
-    Maneater.txt 0.14204991546593435
-    DoYouReallyWanttoHurtMe.txt 0.13435233960537202
-    NeverGonnaLetYouGo.txt 0.06416824693488367
-    TwilightZone.txt 0.06345167404326163
-    BeatIt.txt 0.026908484441030313
-    Tempo de execução:  0.008313417434692383
-    
- dark side of the moon
-    ShameontheMoon.txt 0.145171290676766
-    TotalEclipseoftheHeart.txt 0.1334264793212374
-    TwilightZone.txt 0.0896661370975466
-    Baby,CometoMe.txt 0.022171699313815494
-    HungryLiketheWolf.txt 0.021130476430945618
-    Tempo de execução:  0.00818014144897461
-    
- travel the world
-    SweetDreams(AreMadeofThis).txt 0.36111974926877416
-    Maniac.txt 0.044955052966491056
-    Flashdance...WhataFeeling.txt 0.02400878362884771
-    Maneater.txt 0.02205883084752677
-    Baby,CometoMe.txt 0.0
-    Tempo de execução:  0.01730942726135254
- 
- sweetness break queen
-    EveryBreathYouTake.txt 0.08980461204262148
-    Let'sDance.txt 0.07061254471093727
-    BillieJean.txt 0.05453973559914078
-    HungryLiketheWolf.txt 0.050389398683351766
-    Baby,CometoMe.txt 0.0
-    Tempo de execução:  0.008198022842407227
-
-"""

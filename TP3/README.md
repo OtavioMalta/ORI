@@ -57,3 +57,4 @@ Use as consultas elaboradas no exercício 4 para encontrar o tempo gasto para ge
 ---
 
 Instruções gerais: as respostas devem ser enviadas em um arquivo .zip chamado "TP3_nome_sobrenome.zip". O arquivo deverá ter os seguintes diretórios: "Ex1", "Ex2", "Ex3", "Ex4" e "Ex5". Dentro de cada diretório deve constar cada uma das respostas indicadas cima. IMPORTANTE: caso o arquivo resposta não respeite essa organização/nomenclatura e não possua cada um dos itens solicitados, a nota do TP será 0.
+

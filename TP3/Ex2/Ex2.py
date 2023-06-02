@@ -2,8 +2,6 @@
 import math
 import os
 import re
-import time
-import nltk
 from unidecode import unidecode
 from nltk.probability import FreqDist
 
@@ -25,6 +23,7 @@ def ObtemConsulta(path):
     return f
 
 def processarConsulta(f):
+    # retira pontuação, transforma em minúsculo e remove acentos
     return re.findall(r'\b[A-zÀ-úü]+\b', unidecode(f.lower()))
 
 def obtemDocumentos(pathDir):
@@ -37,6 +36,8 @@ def obtemDocumentos(pathDir):
     for arq in arquivos:
         if arq.endswith(".txt"):
             f = open(pathDir + arq, 'r')
+            
+            # retira pontuação, transforma em minúsculo e remove acentos
             palavra = re.sub(r'[^\w\s]', '', unidecode(f.read().lower())).split()
             documento = palavra
 
@@ -63,7 +64,6 @@ def calcularTF(termos, documentos, consulta):
         tfs[doc_nome] = list(tf.values())
 
     tf = {}
-    # Calcula o TF da consulta
     # Percorre os termos
     for termo in termos:
         # Conta o número de vezes que o termo aparece na consulta
@@ -120,6 +120,7 @@ def  grauSimilaridade(tfidfs, consulta):
             grauSimilaridade[tfidf] += tfidfs[tfidf][i] * consulta[i]
 
         # Calcula a norma 
+        # Se a norma de um dos vetores for 0, o grau de similaridade é 0
         if norma(consulta) == 0 or norma(tfidfs[tfidf]) == 0:
             grauSimilaridade[tfidf] = 0
         else:
@@ -132,12 +133,12 @@ def norma(objeto):
         norma += o ** 2
     return math.sqrt(norma)
 
-print("Digite sua consulta ou caminho:")
+print("Digite sua consulta:")
 consulta = input()
 consultaProcessada = processarConsulta(consulta)
 
-documentos =obtemDocumentos("/workspaces/ORI/TP3/Ex4/documentos/")
-vocabulario = obterVocabulario("/workspaces/ORI/TP3/Ex4/vocabulario.txt")
+documentos =obtemDocumentos("/workspaces/ORI/TP3/Ex2/documentos/")
+vocabulario = obterVocabulario("/workspaces/ORI/TP3/Ex2/vocabulario.txt")
 
 tf = calcularTF(vocabulario, documentos, consultaProcessada)
 idf = calcularIDF(vocabulario, documentos)
@@ -148,4 +149,8 @@ grauSimilaridade = grauSimilaridade(tfidfs, tfidfs["consulta"])
 print("Grau de similaridade: ")
 
 freq = FreqDist(grauSimilaridade)
-print(freq.most_common(5))
+
+#imprime todos os documentos ordenados por grau de similaridade
+for doc, grau in freq.most_common():
+    print(doc, grau)
+    
